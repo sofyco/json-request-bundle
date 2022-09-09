@@ -1,0 +1,40 @@
+{
+    "name": "sofyco/json-request-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony JSON Request Bundle",
+    "keywords": ["php", "symfony", "http", "json", "request", "bundle"],
+    "homepage": "https://github.com/sofyco/json-request-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sofy Korzhova",
+            "email": "sofykorzhova@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/property-access": "^6.0",
+        "symfony/serializer": "^6.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.8",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sofyco\\Bundle\\JsonRequestBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sofyco\\Bundle\\JsonRequestBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}
