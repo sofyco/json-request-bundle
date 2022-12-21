@@ -4,7 +4,7 @@ namespace Sofyco\Bundle\JsonRequestBundle\ArgumentResolver;
 
 use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -12,9 +12,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class DataTransferObjectArgumentResolver implements ArgumentValueResolverInterface
+final readonly class DataTransferObjectArgumentResolver implements ValueResolverInterface
 {
-    public function __construct(private readonly SerializerInterface $serializer)
+    public function __construct(private SerializerInterface $serializer)
     {
     }
 
