@@ -11,6 +11,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy: { matrix: { php-version: ['8.2'] } }
         steps:
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-version }}
+
             -   uses: actions/checkout@v2
 
             -   name: Validate composer.json and composer.lock
@@ -32,6 +36,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy: { matrix: { os: [ubuntu-latest], php-version: ['8.2'] } }
         steps:
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-version }}
+
             -   uses: actions/checkout@v2
 
             -   name: Cache composer packages
@@ -49,8 +57,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy: { matrix: { php-version: ['8.2'] } }
         steps:
-            -   name: Setup PHP with Xdebug
-                uses: shivammathur/setup-php@v2
+            -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php-version }}
                     coverage: coverage
