@@ -18,19 +18,12 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
     {
     }
 
-    public function supports(Request $request, ArgumentMetadata $argument): bool
-    {
-        foreach ($argument->getAttributes() as $attribute) {
-            if ($attribute instanceof DTO) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
+        if (0 === \count($argument->getAttributes(DTO::class))) {
+            return;
+        }
+
         try {
             yield from $this->createObject($request, $argument);
         } catch (\Throwable $exception) {
@@ -48,7 +41,7 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
         );
 
         $content = (string) $request->getContent();
-        $contentType = $request->getContentType();
+        $contentType = $request->getContentTypeFormat();
 
         if ($this->serializer instanceof DecoderInterface && false === empty($content) && null !== $contentType) {
             $data = \array_merge(
