@@ -6,7 +6,6 @@ use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -33,13 +32,6 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
 
     private function getRequestData(Request $request): array
     {
-        $content = (string) $request->getContent();
-        $contentType = $request->getContentTypeFormat();
-
-        if ($this->serializer instanceof DecoderInterface && false === empty($content) && null !== $contentType) {
-            $request->request->add((array) $this->serializer->decode($content, $contentType));
-        }
-
         return \array_merge(
             (array) $request->attributes->get('_route_params', []),
             $request->files->all(),
@@ -52,10 +44,12 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
     {
         $data = $this->getRequestData($request);
 
-        if ($this->serializer instanceof DenormalizerInterface) {
-            yield $this->serializer->denormalize($data, $argument->getType() ?: '', null, [
-                AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
-            ]);
+        if ($this->serializer instanceof DenormalizerInterface && null !== $argument->getType()) {
+            yield $this->serializer->denormalize(
+                data: $data,
+                type: $argument->getType(),
+                context: [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true],
+            );
         }
     }
 }
