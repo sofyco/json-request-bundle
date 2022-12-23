@@ -33,4 +33,20 @@ final class ArgumentResolverTest extends WebTestCase
         $client->catchExceptions(false);
         $client->request(Request::METHOD_POST, '/12345', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
     }
+
+    public function testRequestBodyToParameters(): void
+    {
+        $data = ['name' => 'John'];
+        $body = \json_encode($data) ?: '';
+
+        $client = self::createClient();
+        $client->request(Request::METHOD_POST, '/12345', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $response = $client->getResponse();
+
+        $expected = '{"id":12345,"name":"John"}';
+
+        self::assertSame($expected, $response->getContent());
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+        self::assertSame($data, $client->getRequest()->request->all());
+    }
 }

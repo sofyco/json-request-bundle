@@ -33,24 +33,19 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
 
     private function getRequestData(Request $request): array
     {
-        $data = \array_merge(
+        $content = (string) $request->getContent();
+        $contentType = $request->getContentTypeFormat();
+
+        if ($this->serializer instanceof DecoderInterface && false === empty($content) && null !== $contentType) {
+            $request->request->add((array) $this->serializer->decode($content, $contentType));
+        }
+
+        return \array_merge(
             (array) $request->attributes->get('_route_params', []),
             $request->files->all(),
             $request->query->all(),
             $request->request->all(),
         );
-
-        $content = (string) $request->getContent();
-        $contentType = $request->getContentTypeFormat();
-
-        if ($this->serializer instanceof DecoderInterface && false === empty($content) && null !== $contentType) {
-            $data = \array_merge(
-                $data,
-                (array) $this->serializer->decode($content, $contentType),
-            );
-        }
-
-        return $data;
     }
 
     private function createObject(Request $request, ArgumentMetadata $argument): \Generator
