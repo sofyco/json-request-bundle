@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[AsEventListener(event: KernelEvents::REQUEST)]
+#[AsEventListener(event: KernelEvents::REQUEST, priority: 512)]
 final readonly class JsonRequestListener
 {
     public function __construct(private SerializerInterface $serializer)
