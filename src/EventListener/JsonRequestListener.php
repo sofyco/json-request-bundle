@@ -21,14 +21,8 @@ final readonly class JsonRequestListener
         $content = (string) $request->getContent();
         $contentType = $request->getContentTypeFormat();
 
-        if (null === $contentType || empty($content)) {
-            return;
+        if (null !== $contentType && false === empty($content) && $this->serializer instanceof DecoderInterface) {
+            $request->request->add((array) $this->serializer->decode($content, $contentType));
         }
-
-        if (!$this->serializer instanceof DecoderInterface) {
-            return;
-        }
-
-        $request->request->add((array) $this->serializer->decode($content, $contentType));
     }
 }
