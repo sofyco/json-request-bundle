@@ -3,8 +3,10 @@
 namespace Sofyco\Bundle\JsonRequestBundle\Tests\App;
 
 use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
+use Sofyco\Bundle\JsonRequestBundle\JsonRequestBundle;
 use Sofyco\Bundle\JsonRequestBundle\Tests\App\Attribute\Unsupported;
 use Sofyco\Bundle\JsonRequestBundle\Tests\App\Request\ExampleDTO;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,8 +18,8 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
     public function registerBundles(): iterable
     {
-        yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
-        yield new \Sofyco\Bundle\JsonRequestBundle\JsonRequestBundle();
+        yield new FrameworkBundle();
+        yield new JsonRequestBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
@@ -32,6 +34,6 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
     public function __invoke(string $id, #[DTO] ExampleDTO $example, #[Unsupported] int $unsupported = 1): JsonResponse
     {
-        return new JsonResponse($example);
+        return new JsonResponse(data: $example);
     }
 }
