@@ -6,7 +6,7 @@ use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -26,7 +26,7 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
         try {
             yield from $this->createObject($request, $argument);
         } catch (\Throwable $exception) {
-            throw new NotNormalizableValueException($exception->getMessage());
+            throw new BadRequestHttpException($exception->getMessage());
         }
     }
 

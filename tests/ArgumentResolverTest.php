@@ -5,7 +5,7 @@ namespace Sofyco\Bundle\JsonRequestBundle\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class ArgumentResolverTest extends WebTestCase
 {
@@ -25,7 +25,7 @@ final class ArgumentResolverTest extends WebTestCase
 
     public function testBadRequest(): void
     {
-        $this->expectException(NotNormalizableValueException::class);
+        $this->expectException(BadRequestHttpException::class);
 
         $body = \json_encode(['name' => []]) ?: '';
 
