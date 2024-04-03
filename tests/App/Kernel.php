@@ -8,6 +8,7 @@ use Sofyco\Bundle\JsonRequestBundle\Tests\App\Attribute\Unsupported;
 use Sofyco\Bundle\JsonRequestBundle\Tests\App\Request\ExampleDTO;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -19,12 +20,27 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
+        yield new SecurityBundle();
         yield new JsonRequestBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', ['test' => true]);
+
+        $container->extension('security', [
+            'providers' => [
+                'users_in_memory' => [
+                    'memory' => null,
+                ],
+            ],
+            'firewalls' => [
+                'main' => [
+                    'lazy' => true,
+                    'provider' => 'users_in_memory',
+                ],
+            ],
+        ]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

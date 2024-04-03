@@ -3,6 +3,7 @@
 namespace Sofyco\Bundle\JsonRequestBundle\ArgumentResolver;
 
 use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -13,7 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class DataTransferObjectArgumentResolver implements ValueResolverInterface
 {
-    public function __construct(private SerializerInterface $serializer)
+    public function __construct(private SerializerInterface $serializer, private Security $security)
     {
     }
 
@@ -33,6 +34,7 @@ final readonly class DataTransferObjectArgumentResolver implements ValueResolver
     private function getRequestData(Request $request): array
     {
         return \array_merge(
+            ['user' => $this->security->getUser()?->getUserIdentifier()],
             (array) $request->attributes->get('_route_params', []),
             $request->files->all(),
             $request->query->all(),
