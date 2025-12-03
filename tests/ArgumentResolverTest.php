@@ -9,6 +9,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class ArgumentResolverTest extends WebTestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        restore_exception_handler();
+    }
+
     public function testExample(): void
     {
         $body = \json_encode(['name' => 'John', 'age' => 21, 'isAgree' => true, 'child' => ['id' => 56789]]) ?: '';
