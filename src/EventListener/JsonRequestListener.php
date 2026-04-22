@@ -17,12 +17,14 @@ final readonly class JsonRequestListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        $request = $event->getRequest();
-        $content = (string) $request->getContent();
-        $contentType = $request->getContentTypeFormat();
+        $content = (string) $event->getRequest()->getContent();
+        $contentType = $event->getRequest()->getContentTypeFormat();
 
         if (null !== $contentType && false === empty($content) && $this->serializer instanceof DecoderInterface) {
-            $request->request->add((array) $this->serializer->decode($content, $contentType));
+            /** @var array<string, mixed> $inputs */
+            $inputs = (array) $this->serializer->decode(data: $content, format: $contentType);
+
+            $event->getRequest()->request->add(inputs: $inputs);
         }
     }
 }
