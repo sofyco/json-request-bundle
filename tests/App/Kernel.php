@@ -2,14 +2,12 @@
 
 namespace Sofyco\Bundle\JsonRequestBundle\Tests\App;
 
-use Sofyco\Bundle\JsonRequestBundle\Attribute\DTO;
 use Sofyco\Bundle\JsonRequestBundle\JsonRequestBundle;
-use Sofyco\Bundle\JsonRequestBundle\Tests\App\Attribute\Unsupported;
-use Sofyco\Bundle\JsonRequestBundle\Tests\App\Request\ExampleDTO;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 final class Kernel extends \Symfony\Component\HttpKernel\Kernel
@@ -29,11 +27,11 @@ final class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->add('test', '/{id<\d+>}')->controller(__CLASS__);
+        $routes->add('test', '/')->controller(__CLASS__);
     }
 
-    public function __invoke(string $id, #[DTO] ExampleDTO $example, #[Unsupported] int $unsupported = 1): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        return new JsonResponse(data: $example);
+        return new JsonResponse(data: $request->request->all());
     }
 }

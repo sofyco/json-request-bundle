@@ -17,7 +17,7 @@ final readonly class JsonRequestListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        $content = (string) $event->getRequest()->getContent();
+        $content = $event->getRequest()->getContent();
         $contentType = $event->getRequest()->getContentTypeFormat();
 
         if (null !== $contentType && false === empty($content) && $this->serializer instanceof DecoderInterface) {
